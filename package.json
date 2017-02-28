@@ -1,0 +1,17 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vue build App.vue -o",
+    "build": "vue build App.vue --prod"
+  },
+  "author": "edus44",
+  "license": "ISC",
+  "devDependencies": {
+    "less": "^2.7.2",
+    "less-loader": "^2.2.3",
+    "vue-cli": "^2.8.1"
+  }
+}
