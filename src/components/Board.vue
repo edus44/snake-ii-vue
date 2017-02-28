@@ -7,11 +7,11 @@
         <template v-for="y in numRows">
             <template v-for="x in numCols">
                 <Cell 
-                    :x="( relWidth * ( x - 1 ) )" 
-                    :y="( relHeight * ( y - 1 ) )"
-                    :w="relWidth"
-                    :h="relHeight"
-                    :type="seq[(x-1)+'-'+(y-1)]"
+                    :x="( ( 100 / numCols ) * ( x - 1 ) )" 
+                    :y="( ( 100 / numRows ) * ( y - 1 ) )"
+                    :w="( 100 / numCols )"
+                    :h="( 100 / numRows )"
+                    :figure="seq[(x-1)+'-'+(y-1)]"
                 ></Cell>
             </template>
         </template>
@@ -50,21 +50,13 @@ export default {
             }
         }
     },
-    computed:{
-        relWidth(){
-            return 100 / this.numCols
-        },
-        relHeight(){
-            return 100 / this.numRows
-        }
-    },
     components: {Cell}
 }
 
 </script>
 
 <style lang="less">
-@import 'common';
+@import '../assets/common';
 svg.board {
     background-color: @board-bg-color;
     display: block;

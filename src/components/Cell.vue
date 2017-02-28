@@ -1,13 +1,14 @@
 <template>
-    <svg 
+    <svg
+        class="cell"
         :x="x + '%'" 
         :y="y + '%'" 
         :width="w + '%'" 
         :height="h + '%'"
     >
-        <rect 
-            v-if="type"
-            v-for="r in drawMaps[type]"
+        <rect
+            v-if="figure"
+            v-for="r in figureMaps[figure]"
             :x="( r[0] * 25 ) + '%'"
             :y="( r[1] * 25 ) + '%'"
         ></rect>
@@ -16,11 +17,11 @@
 
 <script>
 
-import * as drawMaps from './drawMaps'
+import * as figureMaps from '../lib/figureMaps'
 export default {
-    props:['x','y','w','h','type'],
-    beforeCreate(){
-        this.drawMaps = drawMaps
+    props:['x','y','w','h','figure'],
+    created(){
+        this.figureMaps = figureMaps
     }
 }
 
@@ -28,12 +29,14 @@ export default {
 </script>
 
 <style lang="less">
-@import 'common';
+@import '../assets/common';
 
-rect{
+svg.cell rect{
     fill:@front-color;
     width: 25%;
     height: 25%;
+    stroke:@board-bg-color;
+    stroke-width:2%;
 }
 
 </style>

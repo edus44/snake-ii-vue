@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vue build App.vue -o",
-    "build": "vue build App.vue --prod"
+    "dev": "vue build src/components/App.vue -o --host 0.0.0.0 --config config.js",
+    "build": "vue build src/components/App.vue --prod --config config.js"
   },
   "author": "edus44",
   "license": "ISC",
