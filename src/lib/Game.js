@@ -35,7 +35,6 @@ export default class Game extends EventEmitter{
             this.lastMoveTs = now
             this.emit('paintGrid',this.getPaintGrid())
         }
-
         window.requestAnimationFrame(this.tick.bind(this))
     }
 

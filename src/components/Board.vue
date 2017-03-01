@@ -23,8 +23,8 @@
 import Cell from './Cell'
 import Game from '../lib/Game'
 
-let cols = 80
-let rows = 40
+let cols = 120
+let rows = 60
 let size = 16
 
 let game = window.game = new Game(cols,rows)
@@ -40,14 +40,13 @@ export default {
             height: rows*size
         }
     },
-    rendered(){
-        console.log('rendered')
-        // window.document.addEventListener('keydown',e=>{
-        //     game.keyPressed(e.keyCode)
-        // })
-        // game.on('paintGrid', painGrid => {
-        //     bus.emit('paintGrid',painGrid)
-        // })
+    created(){
+        window.document.addEventListener('keydown',e=>{
+            game.keyPressed(e.keyCode)
+        })
+        game.on('paintGrid', paintGrid => {
+            bus.emit('paintGrid',paintGrid)
+        })
     },
     components: {Cell}
 }
@@ -59,6 +58,5 @@ export default {
 svg.board {
     background-color: @board-bg-color;
     display: block;
-    // margin:100px auto;
 }
 </style>
