@@ -17,6 +17,7 @@
     "vue-cli": "^2.8.1"
   },
   "dependencies": {
+    "deepstream.io-client-js": "^2.1.1",
     "eventemitter3": "^2.0.2",
     "lodash": "^4.17.4"
   }

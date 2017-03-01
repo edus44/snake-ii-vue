@@ -20,8 +20,11 @@
 
 <script>
 
+
+
 import Cell from './Cell'
 import Game from '../lib/Game'
+import dp from '../lib/dp'
 
 let cols = 60
 let rows = 30
@@ -30,6 +33,9 @@ let size = 16
 let game = window.game = new Game(cols,rows)
 game.foodStore.add(11,2)
 import bus from '../lib/bus'
+
+
+
 
 export default {
     data(){
@@ -46,6 +52,9 @@ export default {
         })
         game.on('paintGrid', paintGrid => {
             bus.emit('paintGrid',paintGrid)
+        })
+        dp.on('keyPressed', key => {
+            game.keyPressed(key)
         })
     },
     components: {Cell}
