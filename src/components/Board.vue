@@ -4,17 +4,10 @@
         :width="width"
         :height="height"
     >
-        <template v-for="y in numRows">
-            <template v-for="x in numCols">
-                <Cell 
-                    :x="( ( 100 / numCols ) * ( x - 1 ) )" 
-                    :y="( ( 100 / numRows ) * ( y - 1 ) )"
-                    :w="( 100 / numCols )"
-                    :h="( 100 / numRows )"
-                    :id="(x-1)+'-'+(y-1)"
-                ></Cell>
-            </template>
-        </template>
+        <Cell
+            v-for="cell in cells"
+            :data="cell"
+        ></Cell>
     </svg>
 </template>
 
@@ -22,6 +15,7 @@
 
 import Cell from './Cell'
 import Game from '../lib/Game'
+import * as figureMaps from '../lib/figureMaps'
 
 let cols = 120
 let rows = 60
@@ -29,7 +23,6 @@ let size = 16
 
 let game = window.game = new Game(cols,rows)
 game.foodStore.add(11,2)
-import bus from '../lib/bus'
 
 export default {
     data(){
@@ -37,15 +30,32 @@ export default {
             numCols: cols,
             numRows: rows,
             width: cols*size,
-            height: rows*size
+            height: rows*size,
+            cells: [],
         }
     },
     created(){
         window.document.addEventListener('keydown',e=>{
             game.keyPressed(e.keyCode)
         })
+
+        let relWidth = 100 / this.numCols
+        let relHeight = 100 / this.numRows
+
         game.on('paintGrid', paintGrid => {
-            bus.emit('paintGrid',paintGrid)
+            let cells = []
+            for(let id in paintGrid){
+                let figureMap = figureMaps[paintGrid[id]]
+                id = id.split('-')
+                cells.push({
+                    x: id[0],
+                    y: id[1],
+                    w: relWidth,
+                    h: relHeight,
+                    figureMap,
+                })
+            }
+            this.cells = cells
         })
     },
     components: {Cell}
