@@ -23,8 +23,8 @@
 import Cell from './Cell'
 import Game from '../lib/Game'
 
-let cols = 120
-let rows = 60
+let cols = 60
+let rows = 30
 let size = 16
 
 let game = window.game = new Game(cols,rows)
