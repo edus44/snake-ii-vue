@@ -9,7 +9,9 @@ import Board from './Board'
 
 export default {
     name: 'app',
-    components: {Board}
+    components: {Board},
+    created(){
+    }
 }
 
 </script>

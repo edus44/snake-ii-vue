@@ -10,8 +10,14 @@
   "author": "edus44",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^3.16.1",
+    "eslint-config-gigigo-standard": "^0.1.9",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
     "vue-cli": "^2.8.1"
+  },
+  "dependencies": {
+    "eventemitter3": "^2.0.2",
+    "lodash": "^4.17.4"
   }
 }

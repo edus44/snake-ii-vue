@@ -7,8 +7,8 @@
         :height="h + '%'"
     >
         <rect
-            v-if="figure"
-            v-for="r in figureMaps[figure]"
+            v-if="figureMap"
+            v-for="r in figureMap"
             :x="( r[0] * 25 ) + '%'"
             :y="( r[1] * 25 ) + '%'"
         ></rect>
@@ -18,10 +18,23 @@
 <script>
 
 import * as figureMaps from '../lib/figureMaps'
+import bus from '../lib/bus'
+
 export default {
-    props:['x','y','w','h','figure'],
+    props:['x','y','w','h','id'],
+    data(){
+        return {
+            figureMap: null
+        }
+    },
     created(){
         this.figureMaps = figureMaps
+        bus.on('paintGrid',paintGrid=>{
+            let figureId = paintGrid[this.id]
+            let figureMap = figureMaps[figureId] || null
+            if (figureMap != this.figureMap)
+                this.figureMap = figureMap
+        })
     }
 }
 
