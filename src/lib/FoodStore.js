@@ -31,7 +31,7 @@ export default class FoodStore{
         let grid = {}
         for( let idx=0; idx<this.chunks.length; idx++ ){
             let chunk = this.chunks[idx]
-            grid[chunk.id] = 'FOOD'
+            grid[chunk.id] = 'FOOD@f'
         }
         return grid
     }

@@ -32,6 +32,11 @@ let size = 16
 
 let game = window.game = new Game(cols,rows)
 game.foodStore.add(11,2)
+game.foodStore.add(2,11)
+game.foodStore.add(3,11)
+game.foodStore.add(4,11)
+game.foodStore.add(5,11)
+game.foodStore.add(5,10)
 import bus from '../lib/bus'
 
 

@@ -8,6 +8,7 @@
     >
         <rect
             v-if="figureMap"
+            :class="`c-${color}`"
             v-for="r in figureMap"
             :x="( r[0] * 25 ) + '%'"
             :y="( r[1] * 25 ) + '%'"
@@ -24,16 +25,27 @@ export default {
     props:['x','y','w','h','id'],
     data(){
         return {
-            figureMap: null
+            figureMap: null,
+            color:null
         }
     },
     created(){
         this.figureMaps = figureMaps
         bus.on('paintGrid',paintGrid=>{
-            let figureId = paintGrid[this.id]
-            let figureMap = figureMaps[figureId] || null
-            if (figureMap != this.figureMap)
+            let figureData = paintGrid[this.id]
+            let figureMap = null
+            let color = null
+
+            if (figureData){
+                figureData = figureData.split('@')
+                figureMap = this.figureMaps[figureData[0]] || null
+                color = figureData[1]
+            }
+
+            if (figureMap != this.figureMap){
                 this.figureMap = figureMap
+                this.color = color || 'f'
+            }
         })
     }
 }
@@ -50,6 +62,19 @@ svg.cell rect{
     height: 25%;
     stroke:@board-bg-color;
     stroke-width:2%;
+
+    &.c-p1{
+        fill:#2240c0;
+    }
+    &.c-p2{
+        fill:#ba143e;
+    }
+    &.c-p3{
+        fill:#ffb410;
+    }
+    &.c-p4{
+        fill:#8c35ee;
+    }
 }
 
 </style>

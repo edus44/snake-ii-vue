@@ -15,8 +15,8 @@ export default class Game extends EventEmitter{
             y: numRows
         }
         this.adders = [
-            new Adder(9,5,DIR.RIGHT,6,this.bounds),
-            new Adder(14,8,DIR.LEFT,6,this.bounds)
+            new Adder('p1',9,5,DIR.RIGHT,6,this.bounds),
+            new Adder('p2',14,8,DIR.LEFT,6,this.bounds)
         ]
 
 
@@ -35,14 +35,15 @@ export default class Game extends EventEmitter{
     }
 
     tick(){
+        window.requestAnimationFrame(this.tick.bind(this))
+
         let now = Date.now()
-        if ( now - this.lastMoveTs > this.tickFrame ){
+        if ( now - this.lastMoveTs >= this.tickFrame ){
             this.adders[0].move()
             this.adders[1].move()
             this.lastMoveTs = now
             this.emit('paintGrid',this.getPaintGrid())
         }
-        window.requestAnimationFrame(this.tick.bind(this))
     }
 
     keyPressed(key){

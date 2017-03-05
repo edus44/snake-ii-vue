@@ -15,7 +15,8 @@ export default class Adder{
      * @param  {Integer} len    Initial adder body length
      * @param  {Object} bounds {x,y} board size
      */
-    constructor(x,y,dir,len,bounds){
+    constructor(id,x,y,dir,len,bounds){
+        this.id = id
         this.dir = dir
         this.nextDirs = []
         this.ateFood = []
@@ -135,7 +136,9 @@ export default class Adder{
         let grid = {}
         for( let idx=0; idx<this.chunks.length; idx++ ){
             let chunk = this.chunks[idx]
-            grid[chunk.id] = this._getFigure(chunk,idx,foods)
+            let figure = this._getFigure(chunk,idx,foods)
+            // grid[chunk.id] = figure
+            grid[chunk.id] = `${figure}@${this.id}`
         }
         return grid
     }
