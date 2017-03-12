@@ -15,6 +15,11 @@
                 ></Cell>
             </template>
         </template>
+        <text x="0" y="16" font-size="16">
+            <tspan v-for="adder in players">
+                {{adder.id}}: {{adder.num}}
+            </tspan>
+        </text>
     </svg>
 </template>
 
@@ -32,27 +37,20 @@ let rows = 30
 let size = 16
 
 let game = window.game = new Game(cols,rows)
-game.foodStore.add(11,2)
-game.foodStore.add(2,11)
-game.foodStore.add(3,11)
-game.foodStore.add(4,11)
-game.foodStore.add(5,11)
-game.foodStore.add(5,10)
 import bus from '../lib/bus'
 
 
 
 
 export default {
-    provide:{
-        figureMaps
-    },
+    provide:{figureMaps},
     data(){
         return {
             numCols: cols,
             numRows: rows,
             width: cols*size,
-            height: rows*size
+            height: rows*size,
+            players:[]
         }
     },
     created(){
@@ -61,6 +59,10 @@ export default {
         })
         game.on('paintGrid', paintGrid => {
             bus.emit('paintGrid',paintGrid)
+            this.players = game.adders.map(adder=>({
+                id: adder.id,
+                num: adder.chunks.length
+            }))
         })
         // dp.on('keyPressed', key => {
             // game.keyPressed(key)

@@ -23,7 +23,8 @@ export default class Game extends EventEmitter{
 
 
         this.lastMoveTs = 0
-        this.tickFrame = 150
+        this.tickFrame = 80
+        this.tickCount = 0
 
         this.tick()
     }
@@ -37,7 +38,7 @@ export default class Game extends EventEmitter{
     }
 
     tick(){
-        // window.requestAnimationFrame(this.tick.bind(this))
+        window.requestAnimationFrame(this.tick.bind(this))
 
         //Check time past
         let now = Date.now()
@@ -60,7 +61,7 @@ export default class Game extends EventEmitter{
         //Collect all snake ids
         let addersChunkIds = this.adders.map( adder => adder.getIds())
 
-        //Check collisions
+        //Check adder collisions
         for(let i in this.adders){
             this.adders[i].turnUnlock()
             for(let j in this.adders){
@@ -68,7 +69,13 @@ export default class Game extends EventEmitter{
             }
         }
 
+        //Food random add
+        if (this.tickCount % 20 === 0){
+            this.foodStore.addRandom(this.bounds)
+        }
+
         this.lastMoveTs = now
+        this.tickCount++
         this.emit('paintGrid',this.getPaintGrid())
     }
 

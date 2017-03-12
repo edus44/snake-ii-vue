@@ -29,6 +29,13 @@ export default class FoodStore{
         this.clearCache()
     }
 
+    addRandom(bounds){
+        this.add(
+            (Math.random() * bounds.x)|0,
+            (Math.random() * bounds.y)|0
+        )
+    }
+
     /**
      * Returns the foods paintGrid
      * @return {Object} Paintgrid

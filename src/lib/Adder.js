@@ -140,7 +140,6 @@ export default class Adder{
         for( let idx=0; idx<this.chunks.length; idx++ ){
             let chunk = this.chunks[idx]
             let figure = this._getFigure(chunk,idx,foods)
-            // grid[chunk.id] = figure
             grid[chunk.id] = `${figure}@${this.id}`
         }
         return grid
@@ -186,13 +185,16 @@ export default class Adder{
 
     turnLock(){
         this.turnLocked = true
+        this.nextDirs.splice(0)
     }
     turnUnlock(){
         this.turnLocked = false
     }
 
     checkCrash(chunkIds,isSelf){
+        //Dont check head if it's self
         chunkIds = chunkIds.slice( isSelf ? 1 : 0 )
+
         if (~chunkIds.indexOf(this.chunks[0].id)){
             if (!this.turnLocked){ //Dont shrink twice
                 this.shrink()
