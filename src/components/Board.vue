@@ -22,9 +22,10 @@
 
 
 
+import * as figureMaps from '../lib/figureMaps'
 import Cell from './Cell'
 import Game from '../lib/Game'
-import dp from '../lib/dp'
+// import dp from '../lib/dp'
 
 let cols = 60
 let rows = 30
@@ -43,6 +44,9 @@ import bus from '../lib/bus'
 
 
 export default {
+    provide:{
+        figureMaps
+    },
     data(){
         return {
             numCols: cols,
@@ -58,9 +62,9 @@ export default {
         game.on('paintGrid', paintGrid => {
             bus.emit('paintGrid',paintGrid)
         })
-        dp.on('keyPressed', key => {
-            game.keyPressed(key)
-        })
+        // dp.on('keyPressed', key => {
+            // game.keyPressed(key)
+        // })
     },
     components: {Cell}
 }

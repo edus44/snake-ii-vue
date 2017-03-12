@@ -35,6 +35,9 @@ export default class Adder{
      * @param {String} dir Direction id
      */
     setDir(newDir){
+        if (this.turnLocked){
+            return
+        }
         let prevDir = this.nextDirs[this.nextDirs.length - 1] || this.dir
         if (newDir != prevDir && (
                 (prevDir == DIR.LEFT  && newDir != DIR.RIGHT) || 
@@ -143,13 +146,15 @@ export default class Adder{
         return grid
     }
 
+    getIds(){
+        return this.chunks.map(chunk=>chunk.id)
+    }
+
     /**
      * Move the adder to next position
      * @return {Adder} this
      */
     move(){
-        this.dir = this.nextDirs.shift() || this.dir
-
         for(let idx = this.chunks.length-1; idx >= 0; idx--){
             let chunk = this.chunks[idx]
 
@@ -161,6 +166,45 @@ export default class Adder{
             }
         }
         return this
+    }
+
+    turn(){
+        if (!this.turnLocked){
+            this.dir = this.nextDirs.shift() || this.dir
+        }
+    }
+
+
+    eat(foods){
+        let foodIndex = foods.indexOf(this.chunks[0].id)
+        if (~foodIndex){
+            this.chunks[0].meta.food = true
+            this.grow()
+        }
+        return foodIndex
+    }
+
+    turnLock(){
+        this.turnLocked = true
+    }
+    turnUnlock(){
+        this.turnLocked = false
+    }
+
+    checkCrash(chunkIds,isSelf){
+        chunkIds = chunkIds.slice( isSelf ? 1 : 0 )
+        if (~chunkIds.indexOf(this.chunks[0].id)){
+            if (!this.turnLocked){ //Dont shrink twice
+                this.shrink()
+            }
+            this.turnLock()
+        }
+    }
+
+    shrink(){
+        if (this.chunks.length>2){
+            this.chunks.splice(0,1)
+        }
     }
 
 }

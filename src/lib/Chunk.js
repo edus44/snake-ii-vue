@@ -102,12 +102,22 @@ export default class Chunk{
     resolveBounds(bounds){
         if (this.x < 0)
             this.x = bounds.x-1
-        else if (this.x > bounds.x)
+        else if (this.x >= bounds.x)
             this.x = 0
         else if (this.y < 0)
             this.y = bounds.y-1
-        else if (this.y > bounds.y)
+        else if (this.y >= bounds.y)
             this.y = 0
         return this
+    }
+
+
+    /**
+     * Return tru if other chunk is in the same position
+     * @param  {Chunk} other 
+     * @return {Boolean}       
+     */
+    overlapsTo(other){
+        return other.x == this.x && other.y == this.y 
     }
 }

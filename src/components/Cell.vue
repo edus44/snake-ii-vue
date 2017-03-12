@@ -7,9 +7,9 @@
         :height="h + '%'"
     >
         <rect
-            v-if="figureMap"
+            v-if="figure"
+            v-for="r in figureMaps[figure]"
             :class="`c-${color}`"
-            v-for="r in figureMap"
             :x="( r[0] * 25 ) + '%'"
             :y="( r[1] * 25 ) + '%'"
         ></rect>
@@ -22,28 +22,29 @@ import * as figureMaps from '../lib/figureMaps'
 import bus from '../lib/bus'
 
 export default {
+    inject:['figureMaps'],
     props:['x','y','w','h','id'],
     data(){
         return {
-            figureMap: null,
-            color:null
+            figure: null,
+            color: null
         }
     },
     created(){
         this.figureMaps = figureMaps
         bus.on('paintGrid',paintGrid=>{
             let figureData = paintGrid[this.id]
-            let figureMap = null
+            let figure = null
             let color = null
 
             if (figureData){
                 figureData = figureData.split('@')
-                figureMap = this.figureMaps[figureData[0]] || null
-                color = figureData[1]
+                figure = figureData[0] || null
+                color = figureData[1] 
             }
 
-            if (figureMap != this.figureMap){
-                this.figureMap = figureMap
+            if (figure != this.figure){
+                this.figure = figure
                 this.color = color || 'f'
             }
         })

@@ -11,6 +11,11 @@ export default class FoodStore{
      */
     constructor(){
         this.chunks = []
+        this.clearCache()
+    }
+
+    clearCache(){
+        this.cache = {grid:null,ids:null}
     }
 
     /**
@@ -21,6 +26,7 @@ export default class FoodStore{
     add(x,y){
         let chunk = new Chunk(x,y)
         this.chunks.push(chunk)
+        this.clearCache()
     }
 
     /**
@@ -28,12 +34,15 @@ export default class FoodStore{
      * @return {Object} Paintgrid
      */
     getPaintGrid(){
-        let grid = {}
-        for( let idx=0; idx<this.chunks.length; idx++ ){
-            let chunk = this.chunks[idx]
-            grid[chunk.id] = 'FOOD@f'
+        if (!this.cache.grid){
+            let grid = {}
+            for( let idx=0; idx<this.chunks.length; idx++ ){
+                let chunk = this.chunks[idx]
+                grid[chunk.id] = 'FOOD@f'
+            }
+            this.cache.grid = grid
         }
-        return grid
+        return this.cache.grid
     }
 
     /**
@@ -41,6 +50,15 @@ export default class FoodStore{
      * @return {Array<String>} Chunk ids
      */
     getIds(){
-        return this.chunks.map(chunk=>chunk.id)
+        if (!this.cache.ids)
+            this.cache.ids = this.chunks.map(chunk=>chunk.id)
+        return this.cache.ids
+    }
+
+    remove(idx){
+        if (~idx){
+            this.chunks.splice(idx,1)
+            this.clearCache()
+        }
     }
 }
