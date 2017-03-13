@@ -137,10 +137,11 @@ export default class Adder{
      */
     getPaintGrid(foods){
         let grid = {}
+        let adderStatus = this.turnLocked ? 'locked' : 'def'
         for( let idx=0; idx<this.chunks.length; idx++ ){
             let chunk = this.chunks[idx]
             let figure = this._getFigure(chunk,idx,foods)
-            grid[chunk.id] = `${figure}@${this.id}`
+            grid[chunk.id] = `${figure}@${this.id}@${adderStatus}`
         }
         return grid
     }

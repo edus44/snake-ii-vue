@@ -9,7 +9,7 @@
         <rect
             v-if="figure"
             v-for="r in figureMaps[figure]"
-            :class="`c-${color}`"
+            :class="`c-${color} s-${status}`"
             :x="( r[0] * 25 ) + '%'"
             :y="( r[1] * 25 ) + '%'"
         ></rect>
@@ -27,25 +27,27 @@ export default {
     data(){
         return {
             figure: null,
-            color: null
+            color: null,
+            status: null,
         }
     },
     created(){
         this.figureMaps = figureMaps
         bus.on('paintGrid',paintGrid=>{
             let figureData = paintGrid[this.id]
-            let figure = null
-            let color = null
+            let figure,color,status
 
             if (figureData){
                 figureData = figureData.split('@')
-                figure = figureData[0] || null
+                figure = figureData[0]
                 color = figureData[1] 
+                status = figureData[2] 
             }
 
-            if (figure != this.figure){
-                this.figure = figure
+            if (figure != this.figure || status!=this.status){
+                this.figure = figure || null
                 this.color = color || 'f'
+                this.status = status || 'def'
             }
         })
     }
@@ -75,6 +77,9 @@ svg.cell rect{
     }
     &.c-p4{
         fill:#8c35ee;
+    }
+    &.s-locked{
+        stroke:white;
     }
 }
 

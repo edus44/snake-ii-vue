@@ -32,8 +32,8 @@ import Cell from './Cell'
 import Game from '../lib/Game'
 // import dp from '../lib/dp'
 
-let cols = 60
-let rows = 30
+let cols = 30
+let rows = 15
 let size = 16
 
 let game = window.game = new Game(cols,rows)
