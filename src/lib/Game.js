@@ -15,18 +15,44 @@ export default class Game extends EventEmitter{
             y: numRows
         }
         this.adders = [
-            new Adder('p1',2,5,DIR.RIGHT,20,this.bounds),
-            new Adder('p2',13,8,DIR.LEFT,6,this.bounds),
+            // new Adder('p1',2,5,DIR.RIGHT,20,this.bounds),
+            // new Adder('p2',13,8,DIR.LEFT,6,this.bounds),
             // new Adder('p3',16,10,DIR.LEFT,6,this.bounds),
             // new Adder('p4',16,2,DIR.UP,6,this.bounds),
         ]
 
 
         this.lastMoveTs = 0
-        this.tickFrame = 80
+        this.tickFrame = 150
         this.tickCount = 0
 
         this.tick()
+    }
+    newAdder(username){
+        let x = (Math.random()*this.bounds.x)|0
+        let y = (Math.random()*this.bounds.y)|0
+        this.adders.push(
+            new Adder(username,x,y,DIR.RIGHT,6,this.bounds),
+        )
+    }
+    removeAdder(username){
+        for(let i in this.adders){
+            if  (this.adders[i].id==username){
+                this.adders.splice(i,1)
+                break
+            }
+        }
+    }
+    adderDir(username,dir){
+        for(let i in this.adders){
+            if (this.adders[i].id==username){
+                if (dir){
+                    console.log(dir)
+                    this.adders[i].setDir(dir)
+                }
+                break
+            }
+        }
     }
     getPaintGrid(){
         let foodIds = this.foodStore.getIds()

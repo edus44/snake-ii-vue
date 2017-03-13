@@ -80,6 +80,7 @@ svg.cell rect{
     }
     &.s-locked{
         stroke:white;
+        fill-opacity:.8;
     }
 }
 

@@ -30,7 +30,7 @@
 import * as figureMaps from '../lib/figureMaps'
 import Cell from './Cell'
 import Game from '../lib/Game'
-// import dp from '../lib/dp'
+import dp from '../lib/dp'
 
 let cols = 30
 let rows = 15
@@ -39,7 +39,15 @@ let size = 16
 let game = window.game = new Game(cols,rows)
 import bus from '../lib/bus'
 
-
+dp.on('player-connected',(username)=>{
+    game.newAdder(username)
+})
+dp.on('player-disconnected',(username)=>{
+    game.removeAdder(username)
+})
+dp.on('player-dir',(data)=>{
+    game.adderDir(data.id,data.dir)
+})
 
 
 export default {
