@@ -1,7 +1,6 @@
 
 import deepstream from 'deepstream.io-client-js'
 import EventEmitter from 'eventemitter3'
-import * as KEY from './keyCodes'
 
 let client = deepstream('localhost:6020').login()
 let bus = new EventEmitter()

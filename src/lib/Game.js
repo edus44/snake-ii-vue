@@ -7,13 +7,15 @@ import Adder from './Adder'
 import EventEmitter from 'eventemitter3'
 
 export default class Game extends EventEmitter{
-    constructor(numCols,numRows){
+    constructor(){
         super()
         this.foodStore = new FoodStore()
         this.bounds = {
-            x: numCols,
-            y: numRows
+            x: 20,
+            y: 9
         }
+        this.cellSize = 16
+
         this.adders = [
             // new Adder('p1',2,5,DIR.RIGHT,20,this.bounds),
             // new Adder('p2',13,8,DIR.LEFT,6,this.bounds),
@@ -21,12 +23,19 @@ export default class Game extends EventEmitter{
             // new Adder('p4',16,2,DIR.UP,6,this.bounds),
         ]
 
-
         this.lastMoveTs = 0
         this.tickFrame = 150
         this.tickCount = 0
 
         this.tick()
+    }
+    setup({cols,rows,cellSize,speed}){
+        if (cols) this.bounds.x = cols
+        if (rows) this.bounds.y = rows
+        if (speed) this.tickFrame = speed
+        if (cellSize) this.cellSize = cellSize
+        this.emit('setup')
+
     }
     newAdder(username){
         let x = (Math.random()*this.bounds.x)|0
@@ -47,7 +56,6 @@ export default class Game extends EventEmitter{
         for(let i in this.adders){
             if (this.adders[i].id==username){
                 if (dir){
-                    console.log(dir)
                     this.adders[i].setDir(dir)
                 }
                 break
@@ -102,7 +110,7 @@ export default class Game extends EventEmitter{
 
         this.lastMoveTs = now
         this.tickCount++
-        this.emit('paintGrid',this.getPaintGrid())
+        this.emit('tick',this.getPaintGrid())
     }
 
     keyPressed(key){

@@ -4,79 +4,56 @@
         :width="width"
         :height="height"
     >
-        <template v-for="y in numRows">
-            <template v-for="x in numCols">
+
+        <FigurePool
+            :w=" 100 / cols "
+            :h=" 100 / rows "
+        ></FigurePool>
+
+        <template v-for="y in rows">
+            <template v-for="x in cols">
                 <Cell 
-                    :x="( ( 100 / numCols ) * ( x - 1 ) )" 
-                    :y="( ( 100 / numRows ) * ( y - 1 ) )"
-                    :w="( 100 / numCols )"
-                    :h="( 100 / numRows )"
                     :id="(x-1)+'-'+(y-1)"
+                    :x="( ( 100 / cols ) * ( x - 1 ) )" 
+                    :y="( ( 100 / rows ) * ( y - 1 ) )"
                 ></Cell>
             </template>
         </template>
-        <text x="0" y="16" font-size="16">
-            <tspan v-for="adder in players">
-                {{adder.id}}: {{adder.num}}
-            </tspan>
-        </text>
+
+        <Score></Score>
+
     </svg>
 </template>
 
 <script>
 
-
-
-import * as figureMaps from '../lib/figureMaps'
 import Cell from './Cell'
-import Game from '../lib/Game'
-import dp from '../lib/dp'
-
-let cols = 30
-let rows = 15
-let size = 16
-
-let game = window.game = new Game(cols,rows)
-import bus from '../lib/bus'
-
-dp.on('player-connected',(username)=>{
-    game.newAdder(username)
-})
-dp.on('player-disconnected',(username)=>{
-    game.removeAdder(username)
-})
-dp.on('player-dir',(data)=>{
-    game.adderDir(data.id,data.dir)
-})
-
+import FigurePool from './FigurePool'
+import Score from './Score'
 
 export default {
-    provide:{figureMaps},
+    inject:['game'],
     data(){
         return {
-            numCols: cols,
-            numRows: rows,
-            width: cols*size,
-            height: rows*size,
-            players:[]
+            cols: 0,
+            rows: 0,
+            width: 0,
+            height: 0
         }
     },
     created(){
-        window.document.addEventListener('keydown',e=>{
-            game.keyPressed(e.keyCode)
-        })
-        game.on('paintGrid', paintGrid => {
-            bus.emit('paintGrid',paintGrid)
-            this.players = game.adders.map(adder=>({
-                id: adder.id,
-                num: adder.chunks.length
-            }))
-        })
-        // dp.on('keyPressed', key => {
-            // game.keyPressed(key)
-        // })
+        this.updateSize()
+        this.game.on('setup',this.updateSize.bind(this))
     },
-    components: {Cell}
+    methods:{
+        updateSize(){
+            this.cols = this.game.bounds.x,
+            this.rows = this.game.bounds.y,
+            this.width = this.game.bounds.x * this.game.cellSize,
+            this.height = this.game.bounds.y * this.game.cellSize
+        }
+    },
+    components: {Cell,FigurePool,Score}
 }
 
 </script>
