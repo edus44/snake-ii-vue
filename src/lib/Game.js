@@ -1,5 +1,5 @@
-import * as DIR from './directions'
-import * as KEY from './keyCodes'
+import DIR from './constants/directions'
+import KEY from './constants/keyCodes'
 
 import FoodStore from './FoodStore'
 import Adder from './Adder'
@@ -7,6 +7,10 @@ import Adder from './Adder'
 import EventEmitter from 'eventemitter3'
 
 export default class Game extends EventEmitter{
+
+    /**
+     * Create new game instace
+     */
     constructor(){
         super()
         this.foodStore = new FoodStore()
@@ -15,6 +19,7 @@ export default class Game extends EventEmitter{
             y: 9
         }
         this.cellSize = 16
+        this.running = false
 
         this.adders = [
             // new Adder('p1',2,5,DIR.RIGHT,20,this.bounds),
@@ -27,23 +32,52 @@ export default class Game extends EventEmitter{
         this.tickFrame = 150
         this.tickCount = 0
 
-        this.tick()
     }
-    setup({cols,rows,cellSize,speed}){
-        if (cols) this.bounds.x = cols
-        if (rows) this.bounds.y = rows
-        if (speed) this.tickFrame = speed
-        if (cellSize) this.cellSize = cellSize
-        this.emit('setup')
 
+    /**
+     * Change game settings
+     * @param  {Integer} options.cols     Number of columns (x)
+     * @param  {Integer} options.rows     Number of rows (y)
+     * @param  {Integer} options.cellSize Cell pixel size 
+     * @param  {Integer} options.speed    Tick frame ms
+     * @return {this}                  
+     */
+    setup({cols,rows,cellSize,speed}){
+        if (typeof cols != 'undefined'){
+            this.bounds.x = cols | 0
+        }
+        if (typeof rows != 'undefined'){
+            this.bounds.y = rows | 0
+        }
+        if (typeof speed != 'undefined'){
+            this.tickFrame = speed | 0
+        }
+        if (typeof cellSize != 'undefined'){
+            this.cellSize = cellSize | 0
+        }
+        this.emit('setup')
+        return this
     }
+
+    /**
+     * Add a new adder in a random position
+     * @param  {String} username Identifier
+     * @return {this}          
+     */
     newAdder(username){
         let x = (Math.random()*this.bounds.x)|0
         let y = (Math.random()*this.bounds.y)|0
         this.adders.push(
             new Adder(username,x,y,DIR.RIGHT,6,this.bounds),
         )
+        return this
     }
+
+    /**
+     * Remove a adder
+     * @param  {String} username Identifier
+     * @return {this}          
+     */
     removeAdder(username){
         for(let i in this.adders){
             if  (this.adders[i].id==username){
@@ -51,7 +85,15 @@ export default class Game extends EventEmitter{
                 break
             }
         }
+        return this
     }
+
+    /**
+     * Change adder direction
+     * @param  {String} username Identifier
+     * @param  {String} dir      
+     * @return {this}          
+     */
     adderDir(username,dir){
         for(let i in this.adders){
             if (this.adders[i].id==username){
@@ -61,7 +103,13 @@ export default class Game extends EventEmitter{
                 break
             }
         }
+        return this
     }
+
+    /**
+     * Return game paintgrid
+     * @return {Object} Paintgrid
+     */
     getPaintGrid(){
         let foodIds = this.foodStore.getIds()
         let grid = Object.assign({}, this.foodStore.getPaintGrid())
@@ -71,14 +119,46 @@ export default class Game extends EventEmitter{
         return grid
     }
 
-    tick(){
-        window.requestAnimationFrame(this.tick.bind(this))
+    /**
+     * Start game animation loop
+     * @return {this} 
+     */
+    start(){
+        this.running = true
+        this.loop()
+        return this
+    }
+
+    /**
+     * Pause game animation loop
+     * @return {this} 
+     */
+    pause(){
+        this.running = false
+        return this
+    }
+
+    /**
+     * Main animation loop
+     * @return {void} 
+     */
+    loop(){
+        if (!this.running)
+            return
+
+        window.requestAnimationFrame(this.loop.bind(this))
 
         //Check time past
-        let now = Date.now()
-        if ( now - this.lastMoveTs < this.tickFrame ){
-            return
+        if ( Date.now() - this.lastMoveTs >= this.tickFrame ){
+            this.tick()
         }
+    }
+
+    /**
+     * Tick logic
+     * @return {void} 
+     */
+    tick(){
 
         //Food ids
         let foodIds = this.foodStore.getIds()
@@ -104,15 +184,20 @@ export default class Game extends EventEmitter{
         }
 
         //Food random add
-        if (this.tickCount % 20 === 0){
+        if (this.tickCount % 100 === 0){
             this.foodStore.addRandom(this.bounds)
         }
 
-        this.lastMoveTs = now
+        this.lastMoveTs = Date.now()
         this.tickCount++
         this.emit('tick',this.getPaintGrid())
     }
 
+    /**
+     * Key bindins
+     * @param  {Number} key Keycode
+     * @return {this}     
+     */
     keyPressed(key){
         if(key == KEY.P1_UP){
             this.adders[0].setDir(DIR.UP)
@@ -137,5 +222,6 @@ export default class Game extends EventEmitter{
         if(key == KEY.START){
             this.tick()
         }
+        return this
     }
 }

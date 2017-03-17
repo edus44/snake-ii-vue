@@ -1,5 +1,5 @@
 
-import * as DIR from './directions'
+import DIR from './constants/directions'
 import Chunk from './Chunk'
 
 /**
@@ -59,6 +59,17 @@ export default class Adder{
         let tailDir = this._getChunkIndexDir(tailIdx)
         newTail.unshift(tailDir,this.bounds)
         this.chunks.push(newTail)
+        return this
+    }
+
+    /**
+     * Shrink the adder one chunk
+     * @return {this} 
+     */
+    shrink(){
+        if (this.chunks.length>2){
+            this.chunks.splice(0,1)
+        }
         return this
     }
 
@@ -146,6 +157,11 @@ export default class Adder{
         return grid
     }
 
+
+    /**
+     * Get all adder chunk ids
+     * @return {Array<String>} Chunk ids
+     */
     getIds(){
         return this.chunks.map(chunk=>chunk.id)
     }
@@ -168,13 +184,22 @@ export default class Adder{
         return this
     }
 
+    /**
+     * Update dir value
+     * @return {this} 
+     */
     turn(){
         if (!this.turnLocked){
             this.dir = this.nextDirs.shift() || this.dir
         }
+        return this
     }
 
-
+    /**
+     * Decide if should eat a food
+     * @param  {Array<String>} foods Food ids
+     * @return {Number}       Index of eaten food
+     */
     eat(foods){
         let foodIndex = foods.indexOf(this.chunks[0].id)
         if (~foodIndex){
@@ -184,14 +209,31 @@ export default class Adder{
         return foodIndex
     }
 
+    /**
+     * Lock dir change
+     * @return {this} 
+     */
     turnLock(){
         this.turnLocked = true
         this.nextDirs.splice(0)
-    }
-    turnUnlock(){
-        this.turnLocked = false
+        return this
     }
 
+    /**
+     * Unlock dir change
+     * @return {this} 
+     */
+    turnUnlock(){
+        this.turnLocked = false
+        return this
+    }
+
+    /**
+     * Check for itself crashing with other adder
+     * @param  {Array<String>}  chunkIds Other adder chucks ids
+     * @param  {Boolean} isSelf   True if comparing with itself
+     * @return {this}           
+     */
     checkCrash(chunkIds,isSelf){
         //Dont check head if it's self
         chunkIds = chunkIds.slice( isSelf ? 1 : 0 )
@@ -202,12 +244,9 @@ export default class Adder{
             }
             this.turnLock()
         }
+        return this
     }
 
-    shrink(){
-        if (this.chunks.length>2){
-            this.chunks.splice(0,1)
-        }
-    }
+
 
 }

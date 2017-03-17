@@ -14,26 +14,39 @@ export default class FoodStore{
         this.clearCache()
     }
 
+    /**
+     * Clears inner cache
+     * @return {this} 
+     */
     clearCache(){
         this.cache = {grid:null,ids:null}
+        return this
     }
 
     /**
      * Add a new food to the store
      * @param {Integer} x 
      * @param {Integer} y 
+     * @return {this} 
      */
     add(x,y){
         let chunk = new Chunk(x,y)
         this.chunks.push(chunk)
         this.clearCache()
+        return this
     }
 
+    /**
+     * Add a food in a random position
+     * @param {Object} bounds Game board bounds
+     * @return {this}
+     */
     addRandom(bounds){
         this.add(
             (Math.random() * bounds.x)|0,
             (Math.random() * bounds.y)|0
         )
+        return this
     }
 
     /**
@@ -62,10 +75,16 @@ export default class FoodStore{
         return this.cache.ids
     }
 
+    /**
+     * Remove a food chunk index
+     * @param  {Number} idx Index of the food
+     * @return {this}
+     */
     remove(idx){
         if (~idx){
             this.chunks.splice(idx,1)
             this.clearCache()
         }
+        return this
     }
 }

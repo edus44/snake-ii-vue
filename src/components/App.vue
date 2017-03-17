@@ -36,6 +36,8 @@ export default {
             speed:150
         })
         game.newAdder('p1')
+        // game.newAdder('p2')
+        game.start()
     }
 }
 

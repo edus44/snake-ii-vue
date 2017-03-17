@@ -1,5 +1,5 @@
 
-import * as DIR from './directions'
+import DIR from './constants/directions'
 
 /**
  * Identifies a position in the grid
