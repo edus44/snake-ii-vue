@@ -36,6 +36,9 @@ export default {
             speed:150
         })
         game.newAdder('p1')
+        // this.$nextTick(()=>{
+            // game.tick()
+        // })
         // game.newAdder('p2')
         game.start()
     }

@@ -11,6 +11,8 @@
                 v-for="r in map"
                 :x="( r[0] * 25 ) + '%'"
                 :y="( r[1] * 25 ) + '%'"
+                width="25%"
+                height="25%"
             ></rect>
         </svg>
     </defs>
@@ -34,8 +36,6 @@ export default {
 
 svg.figure{
     rect{
-        width: 25%;
-        height: 25%;
         stroke-width:2%;
     }
 }

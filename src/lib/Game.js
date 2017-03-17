@@ -184,7 +184,7 @@ export default class Game extends EventEmitter{
         }
 
         //Food random add
-        if (this.tickCount % 100 === 0){
+        if (this.tickCount % 20 === 0){
             this.foodStore.addRandom(this.bounds)
         }
 
