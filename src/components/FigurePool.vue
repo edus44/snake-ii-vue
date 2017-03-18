@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import figureMaps from '../lib/constants/figureMaps'
+import figureMaps from '../constants/figureMaps'
 
 export default {
     props:['w','h'],

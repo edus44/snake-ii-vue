@@ -1,13 +1,14 @@
 <template>
     <section class="app">
-        <!-- <div class="bar">
-            <label>cols</label><input v-model="cols" type="number" @input="syncSetup">
-            <label>rows</label><input v-model="rows" type="number" @input="syncSetup">
-            <label>cellSize</label><input v-model="cellSize" type="number" @input="syncSetup">
-            <label>speed</label><input v-model="speed" type="number" @input="syncSetup">
-        </div> -->
-        <FullScreen></FullScreen>
-        <Controller class="p2" @update-dir="setAdderDir('p2',$event)"></Controller>
+        <div class="bar">
+            {{cols}}x{{rows}}
+            <label>cell</label><input v-model="cellSize" min="8" type="number" @input="handleResize">
+            <label>speed</label><input v-model="speed" type="number" @input="handleResize">
+            <button @click="setNumPlayers(1)">1P</button>
+            <button @click="setNumPlayers(2)">2P</button>
+            <button @click="fullscreen">Fullscreen</button>
+        </div>
+        <Controller v-if="numPlayers>1" class="p2" @update-dir="setAdderDir('p2',$event)"></Controller>
         <Board></Board>
         <Controller class="p1" @update-dir="setAdderDir('p1',$event)"></Controller>
     </section>
@@ -17,7 +18,7 @@
 
 import Board from './Board'
 import Controller from './Controller'
-import FullScreen from './FullScreen'
+import toggleFullscreen from '../lib/fullScreen'
 
 import Game from '../classes/Game'
 let game = window.game = new Game()
@@ -37,20 +38,24 @@ window.document.addEventListener('keydown',e=>{
     game.keyPressed(e.keyCode)
 })
 
+
 export default {
     name: 'app',
     provide:{game},
-    components: {Board,Controller,FullScreen},
+    components: {Board,Controller},
     data:()=>({
         cols:30,
         rows:15,
         cellSize:16,
-        speed:150 
+        speed:180,
+        numPlayers:1
     }),
     created(){
+        window.addEventListener('resize',this.handleResize.bind(this))
+        this.handleResize()
+
         this.syncSetup()
-        game.newAdder('p1')
-        game.newAdder('p2')
+        this.resetPlayers()
         game.start()
     },
     methods:{
@@ -62,8 +67,37 @@ export default {
                 speed:this.speed
             })
         },
+        resetPlayers(){
+            game.removeAdder('p1')
+            game.removeAdder('p2')
+
+            game.newAdder('p1')
+            if (this.numPlayers>1){
+                game.newAdder('p2')
+            }
+        },
+        setNumPlayers(n){
+            this.numPlayers=n
+            this.resetPlayers()
+            this.$nextTick(()=>
+                this.handleResize()
+            )
+        },
         setAdderDir(player,dir){
             game.adderDir(player,dir)
+        },
+        handleResize(){
+            if (this.cellSize<8) return
+
+            let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+            let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+            let rh = this.numPlayers == 1 ? 1.7 : 2.5;
+            this.cols = (w / this.cellSize)|0
+            this.rows = (h / rh / this.cellSize)|0
+            this.syncSetup()
+        },
+        fullscreen(){
+            toggleFullscreen()
         }
     }
 }
@@ -85,16 +119,18 @@ body{
     display: flex;
 }
 .bar{
-    padding:10px;
+    padding:6px;
     label{
         display: inline-block;
-        font-size: 12px;
-        margin-right: 6px;
+        font-size: 10px;
     }
     input{
         display: inline-block;
-        margin-right: 10px;
-        width: 50px;
+        font-size: 10px;
+        width: 30px;
+    }
+    button{
+        font-size: 10px;
     }
 }
 

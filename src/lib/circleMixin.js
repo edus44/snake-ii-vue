@@ -5,7 +5,7 @@ export default {
     directives:tapDirectives,
     data(){
         return {
-            size:80,
+            size:60,
             center:{x:0,y:0},
             pos:{x:0,y:0},
             bounds:null,

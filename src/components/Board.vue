@@ -63,5 +63,6 @@ export default {
 svg.board {
     background-color: @board-bg-color;
     display: block;
+    margin:auto
 }
 </style>
