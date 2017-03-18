@@ -1,5 +1,5 @@
 
-import DIR from './constants/directions'
+import DIR from '../constants/directions'
 import Chunk from './Chunk'
 
 /**
@@ -35,7 +35,7 @@ export default class Adder{
      * @param {String} dir Direction id
      */
     setDir(newDir){
-        if (this.turnLocked){
+        if (this.turnLocked || this.nextDirs.length > 5){
             return
         }
         let prevDir = this.nextDirs[this.nextDirs.length - 1] || this.dir

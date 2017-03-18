@@ -44,16 +44,16 @@ use.cell{
     fill:@front-color;
     stroke:@board-bg-color;
     &.c-p1{
-        fill:#2240c0;
+        fill:@adder-1-color;
     }
     &.c-p2{
-        fill:#ba143e;
+        fill:@adder-2-color;
     }
     &.c-p3{
-        fill:#ffb410;
+        fill:@adder-3-color;
     }
     &.c-p4{
-        fill:#8c35ee;
+        fill:@adder-4-color;
     }
     &.s-locked{
         stroke:white;

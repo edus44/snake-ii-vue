@@ -1,5 +1,5 @@
-import DIR from './constants/directions'
-import KEY from './constants/keyCodes'
+import DIR from '../constants/directions'
+import KEY from '../constants/keyCodes'
 
 import FoodStore from './FoodStore'
 import Adder from './Adder'
