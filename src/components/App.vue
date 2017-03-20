@@ -57,6 +57,7 @@ export default {
         this.syncSetup()
         this.resetPlayers()
         game.start()
+        // this.$nextTick(()=>game.tick())
     },
     methods:{
         syncSetup(){
@@ -91,7 +92,7 @@ export default {
 
             let w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
             let h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-            let rh = this.numPlayers == 1 ? 1.7 : 2.5;
+            let rh = this.numPlayers == 1 ? 1.7 : 2.5
             this.cols = (w / this.cellSize)|0
             this.rows = (h / rh / this.cellSize)|0
             this.syncSetup()

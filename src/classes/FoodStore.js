@@ -1,5 +1,6 @@
 
 import Chunk from './Chunk'
+const BUG_TYPES = ['A','B','C','D','E']
 
 /**
  * Store available foods
@@ -29,11 +30,28 @@ export default class FoodStore{
      * @param {Integer} y 
      * @return {this} 
      */
-    add(x,y){
-        let chunk = new Chunk(x,y)
+    add(x,y,meta){
+        let chunk = new Chunk(x,y,meta)
         this.chunks.push(chunk)
         this.clearCache()
         return this
+    }
+
+    addRandomBug(bounds){
+        let x = (Math.random() * (bounds.x-1))|0
+        let y = (Math.random() * bounds.y)|0
+        let i = (Math.random() * BUG_TYPES.length)|0
+
+        this.add(x, y, {
+            mode: 'BUG',
+            type: BUG_TYPES[i],
+            section: 1
+        })
+        this.add(x+1, y, {
+            mode: 'BUG',
+            type: BUG_TYPES[i],
+            section: 2
+        })
     }
 
     /**
@@ -44,7 +62,8 @@ export default class FoodStore{
     addRandom(bounds){
         this.add(
             (Math.random() * bounds.x)|0,
-            (Math.random() * bounds.y)|0
+            (Math.random() * bounds.y)|0,
+            {mode:'REGULAR'}
         )
         return this
     }
@@ -56,9 +75,25 @@ export default class FoodStore{
     getPaintGrid(){
         if (!this.cache.grid){
             let grid = {}
-            for( let idx=0; idx<this.chunks.length; idx++ ){
-                let chunk = this.chunks[idx]
-                grid[chunk.id] = 'FOOD@f'
+            for( let i=0; i<this.chunks.length; i++ ){
+                let chunk = this.chunks[i]
+
+                //Behaviour
+                grid[chunk.id]  = 'FOOD'
+
+                //Mode
+                grid[chunk.id] += '_'+chunk.meta.mode
+
+                //Type
+                if (chunk.meta.type)
+                    grid[chunk.id] += '_'+chunk.meta.type
+
+                //Section
+                if (chunk.meta.section)
+                    grid[chunk.id] += '_'+chunk.meta.section
+
+                //Color
+                grid[chunk.id] += '@f'
             }
             this.cache.grid = grid
         }
@@ -82,7 +117,12 @@ export default class FoodStore{
      */
     remove(idx){
         if (~idx){
-            this.chunks.splice(idx,1)
+            let [chunk] = this.chunks.splice(idx,1)
+            if (chunk.meta.mode == 'BUG'){
+                if (chunk.meta.section == 2)
+                    idx--
+                this.chunks.splice(idx,1)
+            } 
             this.clearCache()
         }
         return this
