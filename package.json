@@ -14,11 +14,13 @@
     "eslint-config-gigigo-standard": "^0.1.9",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",
-    "vue-cli": "^2.8.1"
+    "vue-cli": "2.8.1"
   },
   "dependencies": {
-    "deepstream.io-client-js": "^2.1.1",
     "eventemitter3": "^2.0.2",
     "lodash": "^4.17.4"
+  },
+  "optionalDependencies": {
+    "deepstream.io-client-js": "^2.1.1"
   }
 }
